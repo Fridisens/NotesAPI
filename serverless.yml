@@ -1,0 +1,63 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: ${env:ORGANISATION}
+# "app" enables Serverless Framework Dashboard features and sharing them with other Services.
+app: notesapi
+# "service" is the name of this project. This will also be added to your AWS resource names.
+service: NotesAPI
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  profile: ${env:PROVIDER_PROFILE}
+  region: eu-north-1
+  iam:
+    role: ${env:PROVIDER_IAM_ROLE}
+  environment:
+    NOTES_TABLE: ${env:RESOURCES_TABLENAME}
+
+functions:
+  getNote:
+    handler: functions/getNote.getNote
+    events:
+      - http:
+          path: api/notes
+          method: get
+          cors: true
+
+  saveNote:
+    handler: functions/saveNote.saveNote
+    events:
+      - http:
+          path: api/notes
+          method: post
+          cors: true
+
+  changeNote:
+    handler: functions/changeNote.changeNote
+    events:
+      - http:
+          path: api/notes
+          method: put
+          cors: true
+
+  deleteNote:
+    handler: functions/deleteNote.deleteNote
+    events:
+      - http:
+          path: api/notes
+          method: delete
+          cors: true
+
+resources:
+  Resources:
+    NotesTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.NOTES_TABLE}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
