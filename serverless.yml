@@ -7,7 +7,7 @@ service: NotesAPI
 
 provider:
   name: aws
-  runtime: nodejs18.x
+  runtime: nodejs16.x
   profile: ${env:PROVIDER_PROFILE}
   region: eu-north-1
   iam:
