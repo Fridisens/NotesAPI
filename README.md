@@ -3,20 +3,23 @@
 This API provides functionality for user authentication and managing user-specific notes. Each endpoint requires proper authentication (via Bearer token) except for signup and login.
 
  ## Base URL
+ ```plaintext
 https://6z1dkbol4e.execute-api.eu-north-1.amazonaws.com/dev/api/
+```
 
 # Endpoints
 
 ### 1. User Signup
 
-    Endpoint: POST /api/user/signup
-	Description: Create a new user account.
-	Request Body (JSON):
-
-    •	{
-        "username": "your-username",
-        "password": "your-password"
-        }
+- **Endpoint:** `POST /api/user/signup`
+- **Description:** Create a new user account.
+- **Request Body (JSON):**
+  ```json
+    {
+    "username": "your-username",
+    "password": "your-password"
+    }
+```
     Response:
 	201 Created: User successfully created.
 	400 Bad Request: Missing or invalid input.
