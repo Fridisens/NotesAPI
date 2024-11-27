@@ -5,8 +5,9 @@ This API provides functionality for user authentication and managing user-specif
 ---
 
 ## Base URL
+```plaintext
 https://6z1dkbol4e.execute-api.eu-north-1.amazonaws.com/dev/api/
-
+```
 ---
 
 ## Endpoints
@@ -16,10 +17,12 @@ https://6z1dkbol4e.execute-api.eu-north-1.amazonaws.com/dev/api/
 - **Endpoint:** `POST /api/user/signup`
 - **Description:** Create a new user account.
 - **Request Body (JSON):**
+```plaintext
   {
     "username": "your-username",
     "password": "your-password"
   }
+```
 - **Response:**
   - `201 Created`: User successfully created.
   - `400 Bad Request`: Missing or invalid input.
@@ -31,15 +34,20 @@ https://6z1dkbol4e.execute-api.eu-north-1.amazonaws.com/dev/api/
 - **Endpoint:** `POST /api/user/login`
 - **Description:** Authenticate a user and receive a token.
 - **Request Body (JSON):**
+```plaintext
   {
     "username": "your-username",
     "password": "your-password"
   }
+```
+
 - **Response:**
   - `200 OK`: Returns a token.
+```plaintext
     {
       "token": "your-jwt-token"
     }
+```
   - `401 Unauthorized`: Invalid username or password.
 
 ---
@@ -52,6 +60,7 @@ https://6z1dkbol4e.execute-api.eu-north-1.amazonaws.com/dev/api/
   Authorization: Bearer <your-token>
 - **Response:**
   - `200 OK`: Returns an array of notes.
+```plaintext
     [
       {
         "id": "note-id",
@@ -62,6 +71,7 @@ https://6z1dkbol4e.execute-api.eu-north-1.amazonaws.com/dev/api/
         "modifiedAt": "2024-11-27T10:00:00.000Z"
       }
     ]
+```
   - `401 Unauthorized`: Missing or invalid token.
 
 ---
@@ -73,10 +83,13 @@ https://6z1dkbol4e.execute-api.eu-north-1.amazonaws.com/dev/api/
 - **Headers:**
   Authorization: Bearer <your-token>
 - **Request Body (JSON):**
+```plaintext
   {
     "title": "My Note",
     "text": "Note content"
   }
+```
+
 - **Response:**
   - `201 Created`: Returns the newly created note.
   - `400 Bad Request`: Invalid input.
@@ -111,9 +124,13 @@ https://6z1dkbol4e.execute-api.eu-north-1.amazonaws.com/dev/api/
 - **Headers:**
   Authorization: Bearer <your-token>
 - **Request Body (JSON):**
+```plaintext
+
   {
     "id": "note-id"
   }
+
+```
 - **Response:**
   - `200 OK`: Note successfully deleted.
   - `400 Bad Request`: Invalid input.
