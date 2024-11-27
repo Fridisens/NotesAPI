@@ -2,6 +2,10 @@
 
 This API provides functionality for user authentication and managing user-specific notes. Each endpoint requires proper authentication (via Bearer token) except for signup and login.
 
+
+## Insomnia Configuration File
+`Insomnia_fridisens.json` file is located in the `config` folder of this project.
+
 ---
 
 ## Base URL
