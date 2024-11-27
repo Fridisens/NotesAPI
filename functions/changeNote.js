@@ -1,8 +1,14 @@
-const AWS = require('aws-sdk');
+import middy from '@middy/core';
+import httpErrorHandler from '@middy/http-error-handler';
+import httpJsonBodyParser from '@middy/http-json-body-parser';
+import { authMiddleware } from '../middlewares/authMiddleware.js';
+import AWS from 'aws-sdk';
+
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
-module.exports.changeNote = async (event) => {
-  const { id, title, text } = JSON.parse(event.body);
+const changeNoteHandler = async (event) => {
+  const { id, title, text } = event.body; // `httpJsonBodyParser` tolkar JSON-objekt
+  const username = event.user.username; // Hämtas från token
 
   if (!id || !title || !text || title.length > 50 || text.length > 300) {
     return {
@@ -14,16 +20,19 @@ module.exports.changeNote = async (event) => {
   const params = {
     TableName: process.env.NOTES_TABLE,
     Key: { id },
-    UpdateExpression: "set title = :title, #txt = :text, modifiedAt = :modifiedAt",
+    UpdateExpression:
+      'set title = :title, #txt = :text, modifiedAt = :modifiedAt',
+    ConditionExpression: 'username = :username',
     ExpressionAttributeNames: {
-      "#txt": "text", 
+      '#txt': 'text',
     },
     ExpressionAttributeValues: {
-      ":title": title,
-      ":text": text,
-      ":modifiedAt": new Date().toISOString(),
+      ':title': title,
+      ':text': text,
+      ':modifiedAt': new Date().toISOString(),
+      ':username': username,
     },
-    ReturnValues: "ALL_NEW",
+    ReturnValues: 'ALL_NEW',
   };
 
   try {
@@ -40,3 +49,8 @@ module.exports.changeNote = async (event) => {
     };
   }
 };
+
+export const changeNote = middy(changeNoteHandler)
+  .use(httpJsonBodyParser())
+  .use(httpErrorHandler())
+  .use(authMiddleware());

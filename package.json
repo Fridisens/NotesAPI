@@ -1,6 +1,7 @@
 {
   "name": "notesapi",
   "version": "1.0.0",
+  "type": "module",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -10,6 +11,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@middy/core": "^6.0.0",
+    "@middy/http-error-handler": "^6.0.0",
+    "@middy/http-json-body-parser": "^6.0.0",
+    "aws-sdk": "^2.1374.0",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "nanoid": "^5.0.9",
     "uuid": "^11.0.3"
   }
 }

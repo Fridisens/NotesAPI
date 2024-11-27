@@ -1,10 +1,17 @@
-const AWS = require('aws-sdk');
-const { v4: uuidv4 } = require('uuid');
+import middy from '@middy/core';
+import httpErrorHandler from '@middy/http-error-handler';
+import httpJsonBodyParser from '@middy/http-json-body-parser';
+import { authMiddleware } from '../middlewares/authMiddleware.js';
+import AWS from 'aws-sdk';
+import { nanoid } from 'nanoid';
+
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
-module.exports.saveNote = async (event) => {
-  const { title, text } = JSON.parse(event.body);
+const saveNoteHandler = async (event) => {
+  const { title, text } = event.body; // Event body kommer från `httpJsonBodyParser`
+  const username = event.user.username; // Användarnamn från den inloggade användaren
 
+  // Validering
   if (!title || !text || title.length > 50 || text.length > 300) {
     return {
       statusCode: 400,
@@ -12,28 +19,38 @@ module.exports.saveNote = async (event) => {
     };
   }
 
+  const newNote = {
+    id: nanoid(),
+    username, // Koppla anteckningen till den inloggade användaren
+    title,
+    text,
+    createdAt: new Date().toISOString(),
+    modifiedAt: new Date().toISOString(),
+  };
+
   const params = {
     TableName: process.env.NOTES_TABLE,
-    Item: {
-      id: uuidv4(),
-      title,
-      text,
-      createdAt: new Date().toISOString(),
-      modifiedAt: new Date().toISOString(),
-    },
+    Item: newNote,
   };
 
   try {
+    console.log('Saving new note:', newNote);
     await dynamoDb.put(params).promise();
+
     return {
-      statusCode: 200,
-      body: JSON.stringify(params.Item),
+      statusCode: 201,
+      body: JSON.stringify(newNote),
     };
   } catch (error) {
-    console.error(error);
+    console.error('Error saving note:', error.message);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: 'Could not save note' }),
+      body: JSON.stringify({ error: 'Could not save note', details: error.message }),
     };
   }
 };
+
+export const saveNote = middy(saveNoteHandler)
+  .use(httpJsonBodyParser())
+  .use(httpErrorHandler())
+  .use(authMiddleware());
