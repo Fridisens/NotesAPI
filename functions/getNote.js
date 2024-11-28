@@ -9,7 +9,7 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient();
 const getNoteHandler = async (event) => {
   console.log('Event received:', JSON.stringify(event, null, 2));
 
-  const username = event.user?.username; // Hämtas från token
+  const username = event.user?.username;
   console.log('Username from token:', username);
 
   if (!username) {
@@ -58,6 +58,6 @@ const getNoteHandler = async (event) => {
 };
 
 export const getNote = middy(getNoteHandler)
-  .use(httpJsonBodyParser()) // För att tolka JSON från body (även om GET normalt inte använder body)
-  .use(httpErrorHandler()) // För att hantera HTTP-specifika fel
-  .use(authMiddleware()); // För att verifiera token
+  .use(httpJsonBodyParser())
+  .use(httpErrorHandler())
+  .use(authMiddleware());

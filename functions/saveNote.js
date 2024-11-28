@@ -8,10 +8,10 @@ import { nanoid } from 'nanoid';
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 const saveNoteHandler = async (event) => {
-  const { title, text } = event.body; // Event body kommer från `httpJsonBodyParser`
-  const username = event.user.username; // Användarnamn från den inloggade användaren
+  const { title, text } = event.body;
+  const username = event.user.username;
 
-  // Validering
+  
   if (!title || !text || title.length > 50 || text.length > 300) {
     return {
       statusCode: 400,
@@ -21,7 +21,7 @@ const saveNoteHandler = async (event) => {
 
   const newNote = {
     id: nanoid(),
-    username, // Koppla anteckningen till den inloggade användaren
+    username,
     title,
     text,
     createdAt: new Date().toISOString(),

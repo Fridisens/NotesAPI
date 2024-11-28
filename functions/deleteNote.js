@@ -7,7 +7,7 @@ import AWS from 'aws-sdk';
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 const deleteNoteHandler = async (event) => {
-  const { id } = event.body; // `httpJsonBodyParser` tolkar JSON-objekt
+  const { id } = event.body;
 
   if (!id) {
     return {
@@ -16,7 +16,7 @@ const deleteNoteHandler = async (event) => {
     };
   }
 
-  const username = event.user.username; // Hämtas från token
+  const username = event.user.username;
 
   const params = {
     TableName: process.env.NOTES_TABLE,

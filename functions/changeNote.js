@@ -7,8 +7,8 @@ import AWS from 'aws-sdk';
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 const changeNoteHandler = async (event) => {
-  const { id, title, text } = event.body; // `httpJsonBodyParser` tolkar JSON-objekt
-  const username = event.user.username; // Hämtas från token
+  const { id, title, text } = event.body;  
+  const username = event.user.username; 
 
   if (!id || !title || !text || title.length > 50 || text.length > 300) {
     return {
